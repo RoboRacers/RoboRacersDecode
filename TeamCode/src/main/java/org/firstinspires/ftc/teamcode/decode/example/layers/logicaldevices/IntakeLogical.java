@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.decode.example.layers.logicaldevices;
 import org.firstinspires.ftc.teamcode.decode.example.layers.physicaldevices.ContinuousMotorImpl;
 
 /**
- * This class is responsible for computing the RPM/Power needed to shoot the
- * Ball for the given distance.
+ * This class is responsible for handling the intaking
+ * Ball at a given power.
  */
 public class IntakeLogical {
 

@@ -2,13 +2,14 @@ package org.firstinspires.ftc.teamcode.decode.example;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.PostLobsterCup.example.layers.coordinators.ShooterCoord;
+import org.firstinspires.ftc.teamcode.decode.example.layers.coordinators.DrivetrainLiftCoord;
 import org.firstinspires.ftc.teamcode.decode.example.layers.coordinators.IntakeCoord;
+import org.firstinspires.ftc.teamcode.decode.example.layers.coordinators.ShooterCoord;
 import org.firstinspires.ftc.teamcode.decode.example.layers.coordinators.TransferCoord;
 
 import java.text.SimpleDateFormat;
@@ -26,11 +27,13 @@ public class RobotWorker extends LinearOpMode {
 
     private ShooterCoord shooterCoord;
     private IntakeCoord intakeCoord;
-
+    private DrivetrainLiftCoord drivetrainLiftCoord;
     private  TransferCoord transferCoord;
+
 
     private static int SHOOTER_MAX_RPM = 312;
     private static int INTAKE_MAX_RPM = 1150;
+    private static int DRIVE_MAX_RPM = 450;
 
     configBank config;
 
@@ -38,6 +41,10 @@ public class RobotWorker extends LinearOpMode {
 
     DcMotor shooter;
     DcMotor intake;
+    DcMotor FRMotor;
+    DcMotor FLMotor;
+    DcMotor BRMotor;
+    DcMotor BLMotor;
 
     @Override
     public void runOpMode() throws InterruptedException
@@ -54,6 +61,12 @@ public class RobotWorker extends LinearOpMode {
         intakeCoord = new IntakeCoord(intake, mytele);
         intakeCoord.initialize();
 
+        FRMotor = getFRMotor();
+        FLMotor = getFLMotor();
+        BRMotor = getBRMotor();
+        BLMotor = getBLMotor();
+        drivetrainLiftCoord = new DrivetrainLiftCoord(FRMotor, FLMotor, BRMotor, BLMotor, mytele);
+        drivetrainLiftCoord.initialize();
 
 
         waitForStart();
@@ -61,7 +74,7 @@ public class RobotWorker extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive())
         {
-            shooterCoord.fire(6); // distance in Feet
+            shooterCoord.shoot(6); // distance in Feet
             logMessage("Running Shooter");
             
             if (gamepad1.right_trigger != 0){
@@ -74,8 +87,10 @@ public class RobotWorker extends LinearOpMode {
 
             if (gamepad1.a){
                 transferCoord.transfer(true);
-                logMessage("Running Intake");
+                logMessage("Running Transfer");
             }
+
+            drivetrainLiftCoord.drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
         }
     }
@@ -96,6 +111,39 @@ public class RobotWorker extends LinearOpMode {
         intakeMotor.setMotorType(motorType);
         return intakeMotor;
     }
+
+    private DcMotor getFRMotor() {
+        DcMotor intakeMotor =  hardwareMap.get(DcMotor.class, "FrontRightMotor");
+        MotorConfigurationType motorType = intakeMotor.getMotorType();
+        motorType.setMaxRPM(DRIVE_MAX_RPM);
+        intakeMotor.setMotorType(motorType);
+        return intakeMotor;
+    }
+
+    private DcMotor getFLMotor() {
+        DcMotor intakeMotor =  hardwareMap.get(DcMotor.class, "FrontLeftMotor");
+        MotorConfigurationType motorType = intakeMotor.getMotorType();
+        motorType.setMaxRPM(DRIVE_MAX_RPM);
+        intakeMotor.setMotorType(motorType);
+        return intakeMotor;
+    }
+
+    private DcMotor getBRMotor() {
+        DcMotor intakeMotor =  hardwareMap.get(DcMotor.class, "BackRightMotor");
+        MotorConfigurationType motorType = intakeMotor.getMotorType();
+        motorType.setMaxRPM(DRIVE_MAX_RPM);
+        intakeMotor.setMotorType(motorType);
+        return intakeMotor;
+    }
+
+    private DcMotor getBLMotor() {
+        DcMotor intakeMotor =  hardwareMap.get(DcMotor.class, "BackLeftMotor");
+        MotorConfigurationType motorType = intakeMotor.getMotorType();
+        motorType.setMaxRPM(DRIVE_MAX_RPM);
+        intakeMotor.setMotorType(motorType);
+        return intakeMotor;
+    }
+
     private void logMessage(String message)
     {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
