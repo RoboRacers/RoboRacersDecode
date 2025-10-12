@@ -23,9 +23,13 @@ public class RobotWorker extends LinearOpMode {
 
     private ShooterCoord shooterCoord;
 
+    private static int SHOOTER_MAX_RPM = 312;
+
     configBank config;
 
     Telemetry mytele;
+
+    DcMotor shooter;
 
 
     @Override
@@ -36,11 +40,13 @@ public class RobotWorker extends LinearOpMode {
 
         mytele = telemetry;
 
+        shooter = getShooterMotor();
 
-        config = new configBank(hardwareMap, telemetry);
+        mytele = telemetry;
 
+        shooterCoord = new ShooterCoord(shooter, mytele);
 
-        shooterCoord = new ShooterCoord(config.getShooter(), mytele);
+        waitForStart();
 
 
 
@@ -49,13 +55,20 @@ public class RobotWorker extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive())
         {
-            shooterCoord.shoot(6); // distance in Feet
+            shooterCoord.fire(6); // distance in Feet
             logMessage("Running Shooter");
 
         }
     }
 
 
+    private DcMotor getShooterMotor() {
+        DcMotor shooterMotor =  hardwareMap.get(DcMotor.class, "GecoWheelMotor");
+        MotorConfigurationType motorType = shooterMotor.getMotorType();
+        motorType.setMaxRPM(SHOOTER_MAX_RPM);
+        shooterMotor.setMotorType(motorType);
+        return shooterMotor;
+    }
 
     private void logMessage(String message)
     {
