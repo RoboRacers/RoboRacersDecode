@@ -28,7 +28,7 @@ public class SmartServo extends ServoImpl
     }
 
 
-    public static SmartServo create(Servo servo)
+    public static SmartServo create(Servo servo, Telemetry telemetry)
     {
 
 
