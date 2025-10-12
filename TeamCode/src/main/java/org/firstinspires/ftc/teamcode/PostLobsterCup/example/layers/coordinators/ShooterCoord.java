@@ -26,7 +26,7 @@ public class ShooterCoord {
 
     }
 
-    public void shoot(int distanceInches)
+    public void fire(int distanceInches)
     {
         // TODO: Add logging of the distance to shoot given to logical layer
 

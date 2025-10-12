@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.PostLobsterCup.example;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.configuration.MotorType;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -47,7 +46,7 @@ public class RobotWorker extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive())
         {
-            shooterCoord.shoot(6); // distance in Feet
+            shooterCoord.fire(6); // distance in Feet
             logMessage("Running Shooter");
 
         }
