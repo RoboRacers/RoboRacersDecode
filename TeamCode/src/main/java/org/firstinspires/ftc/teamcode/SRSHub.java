@@ -1096,9 +1096,6 @@ public class SRSHub extends I2cDeviceSynchDevice<I2cDeviceSynchSimple> {
         );
 
         if (rawData == null || rawData.length == 0 || rawData[0] != DEVICE_ID) {
-            RobotLog.addGlobalWarningMessage(
-                    "SRSHub update failed"
-            );
             disconnected = true;
 
             return;

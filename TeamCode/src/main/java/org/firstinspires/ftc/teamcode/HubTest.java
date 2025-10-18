@@ -19,15 +19,10 @@ public class HubTest extends LinearOpMode {
         // All ports default to NONE, buses default to empty
         SRSHub.Config config = new SRSHub.Config();
 
+
         config.addI2CDevice(
-                1,
-                new SRSHub.GoBildaPinpoint(
-                        -50,
-                        -75,
-                        19.89f,
-                        SRSHub.GoBildaPinpoint.EncoderDirection.FORWARD,
-                        SRSHub.GoBildaPinpoint.EncoderDirection.FORWARD
-                )
+                2,
+                new SRSHub.VL53L5CX(SRSHub.VL53L5CX.Resolution.GRID_8x8)
         );
 
         RobotLog.clearGlobalWarningMsg();
@@ -53,26 +48,31 @@ public class HubTest extends LinearOpMode {
 
             } else {
 
-                SRSHub.GoBildaPinpoint pinpoint = hub.getI2CDevice(
-                        1,
-                        SRSHub.GoBildaPinpoint.class
+                SRSHub.VL53L5CX multiZone = hub.getI2CDevice(
+                        2,
+                        SRSHub.VL53L5CX.class
                 );
+                if (!multiZone.disconnected) {
+                    short[] distances = multiZone.distances;
+                    StringBuilder gridBuilder = new StringBuilder("\n"); // Start with a newline
 
-                if (!pinpoint.disconnected) {
-                    multipleTelemetry.addData(
-                            "pose x (mm)",
-                            pinpoint.xPosition
-                    );
+                    // Check if the distances array actually has 64 values to prevent crashes
+                    if (distances.length == 64) {
+                        // Loop through all 64 distances
+                        for (int i = 0; i < 64; i++) {
+                            // Append each formatted distance
+                            gridBuilder.append(String.format("%5d ", distances[i]));
 
-                    multipleTelemetry.addData(
-                            "pose y (mm)",
-                            pinpoint.yPosition
-                    );
-
-                    multipleTelemetry.addData(
-                            "pose heading (rad)",
-                            pinpoint.hOrientation
-                    );
+                            // If we've just added the 8th item in a row, add a newline
+                            // to start the next row of the grid.
+                            if ((i + 1) % 8 == 0) {
+                                gridBuilder.append("\n");
+                            }
+                        }
+                        multipleTelemetry.addData("Distances (mm) 8x8 Grid", gridBuilder.toString());
+                    } else {
+                        multipleTelemetry.addData("Error", "Expected 64 distance values, but got %d", distances.length);
+                    }
                 }
             }
 
