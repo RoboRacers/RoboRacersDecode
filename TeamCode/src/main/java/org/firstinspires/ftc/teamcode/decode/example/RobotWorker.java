@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ServoImpl;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -45,6 +46,9 @@ public class RobotWorker extends LinearOpMode {
     DcMotor FLMotor;
     DcMotor BRMotor;
     DcMotor BLMotor;
+    ServoImpl Servo1;
+    ServoImpl Servo2;
+
 
     @Override
     public void runOpMode() throws InterruptedException
@@ -65,7 +69,11 @@ public class RobotWorker extends LinearOpMode {
         FLMotor = getFLMotor();
         BRMotor = getBRMotor();
         BLMotor = getBLMotor();
-        drivetrainLiftCoord = new DrivetrainLiftCoord(FRMotor, FLMotor, BRMotor, BLMotor, mytele);
+
+        Servo1 = getServo1();
+        Servo2 = getServo2();
+
+        drivetrainLiftCoord = new DrivetrainLiftCoord(FRMotor, FLMotor, BRMotor, BLMotor, Servo1, Servo2, mytele);
         drivetrainLiftCoord.initialize();
 
 
@@ -142,6 +150,16 @@ public class RobotWorker extends LinearOpMode {
         motorType.setMaxRPM(DRIVE_MAX_RPM);
         intakeMotor.setMotorType(motorType);
         return intakeMotor;
+    }
+
+    private ServoImpl getServo1() {
+        ServoImpl servo =  hardwareMap.get(ServoImpl.class, "Servo1");
+        return servo;
+    }
+
+    private ServoImpl getServo2() {
+        ServoImpl servo =  hardwareMap.get(ServoImpl.class, "Servo2");
+        return servo;
     }
 
     private void logMessage(String message)
