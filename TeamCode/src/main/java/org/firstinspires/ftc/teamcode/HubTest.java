@@ -6,8 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.teamcode.SRSHub;
-
 @TeleOp(name = "HubTest")
 public class HubTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
@@ -21,9 +19,10 @@ public class HubTest extends LinearOpMode {
 
 
         config.addI2CDevice(
-                2,
+                1,
                 new SRSHub.VL53L5CX(SRSHub.VL53L5CX.Resolution.GRID_8x8)
         );
+
 
         RobotLog.clearGlobalWarningMsg();
 
@@ -48,8 +47,9 @@ public class HubTest extends LinearOpMode {
 
             } else {
 
+
                 SRSHub.VL53L5CX multiZone = hub.getI2CDevice(
-                        2,
+                        1,
                         SRSHub.VL53L5CX.class
                 );
                 if (!multiZone.disconnected) {
