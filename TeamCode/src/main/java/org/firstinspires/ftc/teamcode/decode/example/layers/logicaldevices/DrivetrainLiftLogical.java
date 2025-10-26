@@ -46,6 +46,11 @@ public class DrivetrainLiftLogical {
         double backLeftPower = (ly - lx + rx) / denominator;
         double frontRightPower = (ly - lx - rx) / denominator;
         double backRightPower = (ly + lx - rx) / denominator;
+
+        FRMotor.setPower(frontRightPower);
+        FLMotor.setPower(frontLeftPower);
+        BRMotor.setPower(backRightPower);
+        BLMotor.setPower(backLeftPower);
     }
     
     public void liftToggle(){

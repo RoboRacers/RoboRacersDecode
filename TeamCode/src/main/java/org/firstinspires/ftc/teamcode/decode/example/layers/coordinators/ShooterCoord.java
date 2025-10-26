@@ -35,9 +35,7 @@ public class ShooterCoord {
         //  The coordinator must wait for the wheels to be up to target speed.
         //  Then the servo to push the ball to the shooter
         //  After the ball is shoot, the GeckoWheel should stop.
-
-        shooterLogical.shoot(distanceInches);
-
+        boolean ready = shooterLogical.shoot(distanceInches);
 
     }
 }

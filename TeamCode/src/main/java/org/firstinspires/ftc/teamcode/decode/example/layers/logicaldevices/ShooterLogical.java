@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.decode.example.layers.physicaldevices.Cont
  */
 public class ShooterLogical {
 
-    private ContinuousMotorImpl gecoWheelMotor;
+    public ContinuousMotorImpl gecoWheelMotor;
 
     public ShooterLogical(ContinuousMotorImpl gecoWheelMotorParam)
     {
@@ -22,14 +22,18 @@ public class ShooterLogical {
 
     }
 
-    public void shoot(int distanceInches)
+    public double calcSpeed(double distanceInches){
+
+        return 60;
+    }
+
+    public boolean shoot(double distanceInches)
     {
-        double rpm = 60;
+        double rpm = calcSpeed(distanceInches);
         // TODO: Math to compute RPM/Power needed to be set in motor to shoot the Ball to target distance
 
         gecoWheelMotor.setRPM(rpm);
-
-
+        return (Math.abs(calcSpeed(distanceInches) - gecoWheelMotor.getCurrentRPM()) <= 5);
         // TODO: Log that the motor has been given the power to shoot
     }
 }
