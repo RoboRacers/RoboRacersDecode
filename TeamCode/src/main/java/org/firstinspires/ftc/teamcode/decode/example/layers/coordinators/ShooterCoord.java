@@ -38,4 +38,8 @@ public class ShooterCoord {
         boolean ready = shooterLogical.shoot(distanceInches);
 
     }
+
+    public double getSpeed() {
+        return shooterLogical.getSpeed();
+    }
 }

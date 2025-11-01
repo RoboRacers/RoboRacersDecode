@@ -24,7 +24,11 @@ public class ShooterLogical {
 
     public double calcSpeed(double distanceInches){
 
-        return 60;
+        return 3000;
+    }
+
+    public double getSpeed(){
+        return gecoWheelMotor.getCurrentRPM();
     }
 
     public boolean shoot(double distanceInches)
