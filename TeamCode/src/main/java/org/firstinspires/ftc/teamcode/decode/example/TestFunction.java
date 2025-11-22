@@ -22,7 +22,7 @@ import java.util.Calendar;
  *
  */
 
-@TeleOp(name="RobotWorker", group="Linear Opmode")
+@TeleOp(name="Test Worker", group="Linear Opmode")
 public class TestFunction extends LinearOpMode {
 
 

@@ -11,13 +11,16 @@ import org.firstinspires.ftc.teamcode.decode.example.layers.physicaldevices.Cont
  */
 public class ShooterCoord {
 
+    private ContinuousMotorImpl LgecoWheelMotor;
+    private ShooterLogical LshooterLogical;
+
     private ContinuousMotorImpl gecoWheelMotor;
     private ShooterLogical shooterLogical;
 
     public ShooterCoord(DcMotor dcMotor, Telemetry tele)
     {
-        gecoWheelMotor = ContinuousMotorImpl.create(dcMotor, tele); // Get the motor from hardware map
-        shooterLogical = new ShooterLogical(gecoWheelMotor);
+        LgecoWheelMotor = ContinuousMotorImpl.create(dcMotor, tele); // Get the motor from hardware map
+        LshooterLogical = new ShooterLogical(LgecoWheelMotor);
     }
 
     public void initialize()
