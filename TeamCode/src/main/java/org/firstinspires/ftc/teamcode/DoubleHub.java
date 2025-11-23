@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
 
-@TeleOp(name = "HubTest")
-public class HubTest extends LinearOpMode {
+@TeleOp(name = "Double Hub")
+public class DoubleHub extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         MultipleTelemetry multipleTelemetry = new MultipleTelemetry(
                 telemetry,
@@ -16,16 +16,17 @@ public class HubTest extends LinearOpMode {
 
         // All ports default to NONE, buses default to empty
         SRSHub.Config config = new SRSHub.Config();
+        SRSHub.Config config2 = new SRSHub.Config();
 
 
         config.addI2CDevice(
                 1,
-                new SRSHub.VL53L5CX(SRSHub.VL53L5CX.Resolution.GRID_4x4)
+                new SRSHub.VL53L5CX(SRSHub.VL53L5CX.Resolution.GRID_8x8)
         );
 
-        config.addI2CDevice(
-                2,
-                new SRSHub.VL53L5CX(SRSHub.VL53L5CX.Resolution.GRID_4x4)
+        config2.addI2CDevice(
+                1,
+                new SRSHub.VL53L5CX(SRSHub.VL53L5CX.Resolution.GRID_8x8)
         );
 
         RobotLog.clearGlobalWarningMsg();
@@ -34,19 +35,26 @@ public class HubTest extends LinearOpMode {
                 SRSHub.class,
                 "srs"
         );
+        SRSHub hub2 = hardwareMap.get(
+                SRSHub.class,
+                "srs2"
+        );
 
         hub.init(config);
+        hub2.init(config2);
 
-        while (!hub.ready());
+        while (!hub.ready() || !hub2.ready());
         multipleTelemetry.addData("srshub connected", hub.getVersion());
+        multipleTelemetry.addData("srshub connected", hub2.getVersion());
 
 
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
             hub.update();
+            hub2.update();
 
-            if (hub.disconnected()) {
+            if (hub.disconnected()|| hub2.disconnected()) {
                 multipleTelemetry.addLine("srshub disconnected");
 
             } else {
@@ -56,24 +64,20 @@ public class HubTest extends LinearOpMode {
                         1,
                         SRSHub.VL53L5CX.class
                 );
-                SRSHub.VL53L5CX multiZone2 = hub.getI2CDevice(
-                        2,
+                SRSHub.VL53L5CX multiZone2 = hub2.getI2CDevice(
+                        1,
                         SRSHub.VL53L5CX.class
                 );
 
                 if (!multiZone.disconnected && !multiZone2.disconnected) {
-//                if (!multiZone.disconnected) {
-
                     short[] distances = multiZone.distances;
                     short[] distances2 = multiZone2.distances;
                     StringBuilder gridBuilder = new StringBuilder("\n"); // Start with a newline
 
                     // Check if the distances array actually has 64 values to prevent crashes
-                    if (distances.length == 16 && distances2.length==16) {
-//                    if (distances.length == 64){
-
-                            // Loop through all 64 distances
-                        for (int i = 0; i < 16; i++) {
+                    if (distances.length == 64 && distances2.length==64) {
+                        // Loop through all 64 distances
+                        for (int i = 0; i < 64; i++) {
                             // Append each formatted distance
                             gridBuilder.append(String.format("%5d ", distances[i]));
 
@@ -81,12 +85,12 @@ public class HubTest extends LinearOpMode {
 
                             // If we've just added the 8th item in a row, add a newline
                             // to start the next row of the grid.
-                            if ((i + 1) % 4 == 0) {
+                            if ((i + 1) % 8 == 0) {
                                 gridBuilder.append("\n");
                             }
                         }
                         gridBuilder.append("\n");
-                        for (int i = 0; i < 16; i++) {
+                        for (int i = 0; i < 64; i++) {
                             // Append each formatted distance
                             gridBuilder.append(String.format("%5d ", distances2[i]));
 
@@ -94,7 +98,7 @@ public class HubTest extends LinearOpMode {
 
                             // If we've just added the 8th item in a row, add a newline
                             // to start the next row of the grid.
-                            if ((i + 1) % 4 == 0) {
+                            if ((i + 1) % 8 == 0) {
                                 gridBuilder.append("\n");
                             }
                         }
